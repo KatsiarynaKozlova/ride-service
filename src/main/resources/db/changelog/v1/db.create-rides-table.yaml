@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Katsiatyna
+      changes:
+        - createTable:
+            tableName: rides
+            columns:
+              - column:
+                  name: ride_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: passenger_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: driver_id
+                  type: bigint
+              - column:
+                  name: route_start
+                  type: varchar(255)
+              - column:
+                  name: route_end
+                  type: varchar(255)
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: decimal
+              - column:
+                  name: date_time_create
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
