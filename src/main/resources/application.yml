@@ -5,8 +5,8 @@ spring:
     name: ride-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: root
-    password: persik
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
     url: jdbc:postgresql://localhost:5432/ride_db
   jpa:
     show-sql: true
@@ -15,3 +15,4 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
+    
