@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionApiHandler {
     @ExceptionHandler(RideNotFoundException.class)
-    public ResponseEntity<ErrorMessage> notFoundException(Exception exception) {
+    public ResponseEntity<ErrorMessage> notFoundException(RuntimeException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorMessage(exception.getMessage()));
