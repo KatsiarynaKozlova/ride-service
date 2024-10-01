@@ -57,7 +57,7 @@ public class RideController {
                 .body(rideMapper.toResponse(newRide));
     }
 
-    @PutMapping("/{id}/cancel")
+    @PutMapping("/{id}")
     public ResponseEntity<RideResponse> changeRideStatus(@PathVariable Long id, @RequestBody RideStatus status) {
         Ride ride = rideService.changeRideStatus(id, status);
         return ResponseEntity.ok(rideMapper.toResponse(ride));
