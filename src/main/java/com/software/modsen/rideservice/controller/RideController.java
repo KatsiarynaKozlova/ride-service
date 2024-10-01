@@ -7,6 +7,14 @@ import com.software.modsen.rideservice.mapper.RideMapper;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
 import com.software.modsen.rideservice.service.RideService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +31,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/rides")
 @RequiredArgsConstructor
+@Tag(name = "Rides")
 public class RideController {
     private final RideService rideService;
     private final RideMapper rideMapper;
 
     @GetMapping
+    @Operation(description = "Get list of all existing rides ")
+    @ApiResponse(responseCode = "200", description = "List of all Rides",
+            content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = RideListResponse.class))})
     public ResponseEntity<RideListResponse> getAllRides() {
         List<Ride> rideList = rideService.gelAllRides();
         List<RideResponse> rideResponseList = rideMapper.toRideResponseList(rideList);
@@ -35,6 +48,15 @@ public class RideController {
     }
 
     @GetMapping("/{id}")
+    @Operation(description = "Get ride by ID ",
+            parameters = {@Parameter(name = "id", description = "This is the ride ID that will be searched for")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found Ride by ID",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RideResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Ride not found",
+                    content = @Content(schema = @Schema(hidden = true)))}
+    )
     public ResponseEntity<RideResponse> getRideById(@PathVariable Long id) {
         Ride ride = rideService.getRide(id);
         RideResponse rideResponse = rideMapper.toResponse(ride);
@@ -42,6 +64,10 @@ public class RideController {
     }
 
     @GetMapping("/free")
+    @Operation(description = "Get list of all free rides(without driver) ")
+    @ApiResponse(responseCode = "200", description = "List of all Rides without drivers",
+            content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = RideListResponse.class))})
     public ResponseEntity<RideListResponse> gelAllFreeRides() {
         List<Ride> rideList = rideService.getAllCreatedRides();
         List<RideResponse> rideResponseList = rideMapper.toRideResponseList(rideList);
@@ -49,6 +75,13 @@ public class RideController {
     }
 
     @PostMapping
+    @Operation(description = "Create new ride with status Created ",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RideRequest.class))))
+    @ApiResponse(responseCode = "200", description = "Create Ride",
+            content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = RideResponse.class))})
     public ResponseEntity<RideResponse> createRide(@RequestBody RideRequest rideRequest) {
         Ride ride = rideMapper.toModel(rideRequest);
         Ride newRide = rideService.createRide(ride);
@@ -58,6 +91,14 @@ public class RideController {
     }
 
     @PutMapping("/{id}")
+    @Operation(description = "Update Ride status ",
+            parameters = {@Parameter(name = "id", description = "This is the ride ID that will be updated")},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RideStatus.class))))
+    @ApiResponse(responseCode = "200", description = "Update Ride",
+            content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = RideResponse.class))})
     public ResponseEntity<RideResponse> changeRideStatus(@PathVariable Long id, @RequestBody RideStatus status) {
         Ride ride = rideService.changeRideStatus(id, status);
         return ResponseEntity.ok(rideMapper.toResponse(ride));
