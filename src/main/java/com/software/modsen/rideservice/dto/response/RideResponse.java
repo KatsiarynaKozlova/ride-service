@@ -1,6 +1,6 @@
 package com.software.modsen.rideservice.dto.response;
 
-import com.software.modsen.rideservice.model.Status;
+import com.software.modsen.rideservice.model.RideStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +21,5 @@ public class RideResponse {
     private String routeEnd;
     private BigDecimal price;
     private LocalDateTime dateTimeCreate;
-    private Status status;
+    private RideStatus status;
 }

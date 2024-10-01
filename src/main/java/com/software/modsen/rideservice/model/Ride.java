@@ -41,5 +41,5 @@ public class Ride {
     private LocalDateTime dateTimeCreate;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private RideStatus status;
 }
