@@ -5,8 +5,11 @@ import com.software.modsen.rideservice.dto.response.RideResponse;
 import com.software.modsen.rideservice.model.Ride;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface RideMapper {
     RideResponse toResponse(Ride ride);
     Ride toModel(RideRequest rideRequest);
+    List<RideResponse> toRideResponseList(List<Ride> rideList);
 }

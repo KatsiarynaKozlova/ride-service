@@ -2,7 +2,7 @@ package com.software.modsen.rideservice.service;
 
 import com.software.modsen.rideservice.exception.RideNotFoundException;
 import com.software.modsen.rideservice.model.Ride;
-import com.software.modsen.rideservice.model.Status;
+import com.software.modsen.rideservice.model.RideStatus;
 import com.software.modsen.rideservice.repository.RideRepository;
 import com.software.modsen.rideservice.util.ExceptionMessages;
 import lombok.RequiredArgsConstructor;
@@ -25,37 +25,18 @@ public class RideService {
     }
 
     public List<Ride> getAllCreatedRides() {
-        return rideRepository.getRidesByStatusIs(Status.CREATED);
+        return rideRepository.getRidesByStatusIs(RideStatus.CREATED);
     }
 
     public Ride createRide(Ride ride) {
-        ride.setStatus(Status.CREATED);
+        ride.setStatus(RideStatus.CREATED);
         ride.setDateTimeCreate(LocalDateTime.now());
         return rideRepository.save(ride);
     }
 
-    public Ride acceptRide(Long id, Long driverId) {
+    public Ride changeRideStatus(Long id, RideStatus status) {
         Ride ride = getByIdOrElseThrow(id);
-        ride.setDriverId(driverId);
-        ride.setStatus(Status.ACCEPTED);
-        return rideRepository.save(ride);
-    }
-
-    public Ride cancelRide(Long id) {
-        Ride ride = getByIdOrElseThrow(id);
-        ride.setStatus(Status.CANCELED);
-        return rideRepository.save(ride);
-    }
-
-    public Ride finishRide(Long id) {
-        Ride ride = getByIdOrElseThrow(id);
-        ride.setStatus(Status.FINISHED);
-        return rideRepository.save(ride);
-    }
-
-    public Ride startRide(Long id) {
-        Ride ride = getByIdOrElseThrow(id);
-        ride.setStatus(Status.ACTIVE);
+        ride.setStatus(status);
         return rideRepository.save(ride);
     }
 
