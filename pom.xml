@@ -23,6 +23,9 @@
         <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
         <mockito-core.version>5.14.1</mockito-core.version>
         <cucmber.version>7.19.0</cucmber.version>
+        <testcontainers.version>1.20.2</testcontainers.version>
+        <commons-compress.version>1.26.0</commons-compress.version>
+        <junit-jupiter.version>5.11.1</junit-jupiter.version>
     </properties>
     <dependencies>
         <dependency>
@@ -91,10 +94,9 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.11.1</version>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
@@ -111,38 +113,34 @@
             <artifactId>cucumber-spring</artifactId>
             <version>${cucmber.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.testcontainers/testcontainers -->
-        <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.20.2</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.26.0</version>
+            <version>${commons-compress.version}</version>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>${testcontainers.version}</version>
-            <scope>1.20.2</scope>
+            <scope>${testcontainers.version}</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.20.2</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-testcontainers</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
     <dependencyManagement>
         <dependencies>
