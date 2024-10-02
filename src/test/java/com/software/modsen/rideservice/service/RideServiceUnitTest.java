@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
-public class RideServiceTest {
+public class RideServiceUnitTest {
     @Mock
     private RideRepository repository;
     @InjectMocks
