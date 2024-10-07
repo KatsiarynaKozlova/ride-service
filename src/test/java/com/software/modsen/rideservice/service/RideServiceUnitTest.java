@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -21,11 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public class RideServiceUnitTest {
     @Mock
     private RideRepository repository;
@@ -37,7 +40,8 @@ public class RideServiceUnitTest {
         Long id = 1L;
         Ride mockRide = new Ride();
         mockRide.setId(id);
-        when(repository.findById(id)).thenReturn(Optional.of(mockRide));
+
+        when(repository.findById(anyLong())).thenReturn(Optional.of(mockRide));
 
         Ride ride = rideService.getRide(id);
 
@@ -49,7 +53,7 @@ public class RideServiceUnitTest {
     @Test
     void testGetRideNotFound() {
         Long id = 1L;
-        when(repository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(RideNotFoundException.class, () -> {
             rideService.getRide(id);
@@ -84,7 +88,7 @@ public class RideServiceUnitTest {
     void testGetAllCreatedRides() {
         Ride ride1 = new Ride();
         ride1.setStatus(RideStatus.CREATED);
-        when(repository.getRidesByStatusIs(RideStatus.CREATED)).thenReturn(Arrays.asList(ride1));
+        when(repository.getRidesByStatusIs(any(RideStatus.class))).thenReturn(List.of(ride1));
 
         List<Ride> createdRides = rideService.getAllCreatedRides();
 
@@ -95,7 +99,7 @@ public class RideServiceUnitTest {
 
     @Test
     void testGetAllCreatedRidesEmpty() {
-        when(repository.getRidesByStatusIs(RideStatus.CREATED)).thenReturn(Collections.emptyList());
+        when(repository.getRidesByStatusIs(any(RideStatus.class))).thenReturn(Collections.emptyList());
 
         List<Ride> createdRides = rideService.getAllCreatedRides();
 
@@ -109,6 +113,7 @@ public class RideServiceUnitTest {
         Ride savedRide = new Ride();
         savedRide.setStatus(RideStatus.CREATED);
         savedRide.setDateTimeCreate(LocalDateTime.now());
+
         when(repository.save(any(Ride.class))).thenReturn(savedRide);
 
         Ride resultRide = rideService.createRide(ride);
@@ -125,8 +130,9 @@ public class RideServiceUnitTest {
         Ride ride = new Ride();
         ride.setId(id);
         ride.setStatus(RideStatus.CREATED);
-        when(repository.findById(id)).thenReturn(Optional.of(ride));
-        when(repository.save(ride)).thenReturn(ride);
+
+        when(repository.findById(anyLong())).thenReturn(Optional.of(ride));
+        when(repository.save(any(Ride.class))).thenReturn(ride);
 
         Ride updatedRide = rideService.changeRideStatus(id, RideStatus.ACCEPTED);
 
@@ -139,7 +145,7 @@ public class RideServiceUnitTest {
     @Test
     void testChangeRideStatusNotFound() {
         Long id = 1L;
-        when(repository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(RideNotFoundException.class, () -> {
             rideService.changeRideStatus(id, RideStatus.ACCEPTED);
