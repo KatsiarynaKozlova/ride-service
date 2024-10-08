@@ -24,8 +24,9 @@
         <mockito-core.version>5.14.1</mockito-core.version>
         <cucumber.version>7.19.0</cucumber.version>
         <testcontainers.version>1.20.2</testcontainers.version>
-        <commons-compress.version>1.26.0</commons-compress.version>
+        <commons-compress.version>1.27.1</commons-compress.version>
         <junit-jupiter.version>5.11.1</junit-jupiter.version>
+        <spring-cloud-contract.version>4.1.4</spring-cloud-contract.version>
     </properties>
     <dependencies>
         <dependency>
@@ -141,6 +142,21 @@
             <artifactId>spring-boot-testcontainers</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-stream-test-support</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-contract-verifier</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -183,6 +199,16 @@
                             <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+                <version>${spring-cloud-contract.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <baseClassForTests>com.software.modsen.rideservice.contract.RideBaseContractTest</baseClassForTests>
+                    <contractsDirectory>src/test/resources/contracts</contractsDirectory>
                 </configuration>
             </plugin>
         </plugins>
