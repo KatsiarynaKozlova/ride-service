@@ -14,4 +14,3 @@ Feature: Ride service test
     Given an existing ride with id 1
     When the id 1 is passed to the findById method
     Then The response should contain ride with id 1
-    
