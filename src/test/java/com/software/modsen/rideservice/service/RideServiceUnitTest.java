@@ -4,6 +4,7 @@ import com.software.modsen.rideservice.exception.RideNotFoundException;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
 import com.software.modsen.rideservice.repository.RideRepository;
+import com.software.modsen.rideservice.util.RideTestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,12 +12,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.software.modsen.rideservice.util.RideTestUtil.DEFAULT_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,40 +37,35 @@ public class RideServiceUnitTest {
 
     @Test
     void testGetRide() {
-        Long id = 1L;
-        Ride mockRide = new Ride();
-        mockRide.setId(id);
+        Ride expectedRide = RideTestUtil.getDefaultAcceptedRide();
+        when(repository.findById(anyLong())).thenReturn(Optional.of(expectedRide));
 
-        when(repository.findById(anyLong())).thenReturn(Optional.of(mockRide));
+        Ride resultRide = rideService.getRide(DEFAULT_ID);
 
-        Ride ride = rideService.getRide(id);
-
-        assertNotNull(ride);
-        assertEquals(id, ride.getId());
-        verify(repository, times(1)).findById(id);
+        assertNotNull(resultRide);
+        assertEquals(DEFAULT_ID, resultRide.getId());
+        assertEquals(expectedRide, resultRide);
+        verify(repository, times(1)).findById(DEFAULT_ID);
     }
 
     @Test
     void testGetRideNotFound() {
-        Long id = 1L;
         when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(RideNotFoundException.class, () -> {
-            rideService.getRide(id);
-        });
+        assertThrows(RideNotFoundException.class, () -> rideService.getRide(DEFAULT_ID));
 
-        verify(repository, times(1)).findById(id);
+        verify(repository, times(1)).findById(DEFAULT_ID);
     }
 
     @Test
     void testGetAllRides() {
-        Ride ride1 = new Ride();
-        Ride ride2 = new Ride();
-        when(repository.findAll()).thenReturn(Arrays.asList(ride1, ride2));
+        List<Ride> expectedRideList = List.of(RideTestUtil.getDefaultAcceptedRide());
+        when(repository.findAll()).thenReturn(expectedRideList);
 
-        List<Ride> rides = rideService.gelAllRides();
+        List<Ride> resultRideList = rideService.gelAllRides();
 
-        assertEquals(2, rides.size());
+        assertEquals(1, resultRideList.size());
+        assertEquals(expectedRideList, resultRideList);
         verify(repository, times(1)).findAll();
     }
 
@@ -78,22 +73,22 @@ public class RideServiceUnitTest {
     void testGetAllRidesEmpty() {
         when(repository.findAll()).thenReturn(Collections.emptyList());
 
-        List<Ride> rides = rideService.gelAllRides();
+        List<Ride> resultRideList = rideService.gelAllRides();
 
-        assertTrue(rides.isEmpty());
+        assertTrue(resultRideList.isEmpty());
         verify(repository, times(1)).findAll();
     }
 
     @Test
     void testGetAllCreatedRides() {
-        Ride ride1 = new Ride();
-        ride1.setStatus(RideStatus.CREATED);
-        when(repository.getRidesByStatusIs(any(RideStatus.class))).thenReturn(List.of(ride1));
+        List<Ride> expectedRideList = List.of(RideTestUtil.getDefaultCreatedRide());
+        when(repository.getRidesByStatusIs(any(RideStatus.class))).thenReturn(expectedRideList);
 
-        List<Ride> createdRides = rideService.getAllCreatedRides();
+        List<Ride> resultCreatedRides = rideService.getAllCreatedRides();
 
-        assertEquals(1, createdRides.size());
-        assertEquals(RideStatus.CREATED, createdRides.get(0).getStatus());
+        assertEquals(1, resultCreatedRides.size());
+        assertEquals(RideStatus.CREATED, resultCreatedRides.get(0).getStatus());
+        assertEquals(expectedRideList, resultCreatedRides);
         verify(repository, times(1)).getRidesByStatusIs(RideStatus.CREATED);
     }
 
@@ -109,48 +104,40 @@ public class RideServiceUnitTest {
 
     @Test
     void testCreateRide() {
-        Ride ride = new Ride();
-        Ride savedRide = new Ride();
-        savedRide.setStatus(RideStatus.CREATED);
-        savedRide.setDateTimeCreate(LocalDateTime.now());
+        Ride preSavedRide = RideTestUtil.getDefaultPreCreatedRide();
+        Ride savedRide = RideTestUtil.getDefaultCreatedRide();
 
         when(repository.save(any(Ride.class))).thenReturn(savedRide);
 
-        Ride resultRide = rideService.createRide(ride);
+        Ride resultRide = rideService.createRide(preSavedRide);
 
         assertNotNull(resultRide);
         assertEquals(RideStatus.CREATED, resultRide.getStatus());
         assertNotNull(resultRide.getDateTimeCreate());
-        verify(repository, times(1)).save(ride);
+        verify(repository, times(1)).save(preSavedRide);
     }
 
     @Test
     void testChangeRideStatus() {
-        Long id = 1L;
-        Ride ride = new Ride();
-        ride.setId(id);
-        ride.setStatus(RideStatus.CREATED);
+        Ride ride = RideTestUtil.getDefaultAcceptedRide();
 
         when(repository.findById(anyLong())).thenReturn(Optional.of(ride));
         when(repository.save(any(Ride.class))).thenReturn(ride);
 
-        Ride updatedRide = rideService.changeRideStatus(id, RideStatus.ACCEPTED);
+        Ride updatedRide = rideService.changeRideStatus(DEFAULT_ID, RideStatus.ACCEPTED);
 
         assertNotNull(updatedRide);
         assertEquals(RideStatus.ACCEPTED, updatedRide.getStatus());
-        verify(repository, times(1)).findById(id);
+        verify(repository, times(1)).findById(DEFAULT_ID);
         verify(repository, times(1)).save(ride);
     }
 
     @Test
     void testChangeRideStatusNotFound() {
-        Long id = 1L;
         when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(RideNotFoundException.class, () -> {
-            rideService.changeRideStatus(id, RideStatus.ACCEPTED);
-        });
+        assertThrows(RideNotFoundException.class, () -> rideService.changeRideStatus(DEFAULT_ID, RideStatus.ACCEPTED));
 
-        verify(repository, times(1)).findById(id);
+        verify(repository, times(1)).findById(DEFAULT_ID);
     }
 }
