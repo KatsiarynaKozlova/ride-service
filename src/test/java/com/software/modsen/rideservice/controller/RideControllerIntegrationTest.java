@@ -14,9 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static com.software.modsen.rideservice.util.RideTestUtil.ACCEPTED_RIDE_STATUS;
 import static com.software.modsen.rideservice.util.RideTestUtil.DEFAULT_ID;

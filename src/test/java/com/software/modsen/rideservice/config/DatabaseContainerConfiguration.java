@@ -21,7 +21,6 @@ public class DatabaseContainerConfiguration {
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        // Dynamically set the datasource URL, driver, username, and password
         registry.add("spring.datasource.url", postgreSQL::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQL::getUsername);
         registry.add("spring.datasource.password", postgreSQL::getPassword);

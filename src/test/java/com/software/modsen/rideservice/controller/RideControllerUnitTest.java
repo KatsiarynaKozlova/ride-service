@@ -1,6 +1,5 @@
 package com.software.modsen.rideservice.controller;
 
-
 import com.software.modsen.rideservice.dto.response.RideListResponse;
 import com.software.modsen.rideservice.dto.response.RideResponse;
 import com.software.modsen.rideservice.dto.request.RideRequest;
@@ -57,7 +56,7 @@ public class RideControllerUnitTest {
 
         ResponseEntity<RideResponse> resultResponse = rideController.getRideById(1L);
 
-        verify( rideService, times(1)).getRide(1L);
+        verify(rideService, times(1)).getRide(1L);
         assertEquals(HttpStatus.OK, resultResponse.getStatusCode());
         assertEquals(rideResponse, resultResponse.getBody());
     }
