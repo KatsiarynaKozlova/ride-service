@@ -51,7 +51,7 @@ public class RideControllerUnitTest {
     @Test
     public void testGetRideById() {
         Ride ride = RideTestUtil.getDefaultAcceptedRide();
-        RideResponse rideResponse = RideTestUtil.getDefaultRideResponse();
+        RideResponse rideResponse = RideTestUtil.getDefaultAcceptedRideResponse();
         when(rideService.getRide(anyLong())).thenReturn(ride);
         when(rideMapper.toResponse(any(Ride.class))).thenReturn(rideResponse);
 
@@ -66,7 +66,7 @@ public class RideControllerUnitTest {
     public void testCreateRide() {
         Ride ride = RideTestUtil.getDefaultCreatedRide();
         RideRequest rideRequest = RideTestUtil.getDefaultRideRequest();
-        RideResponse expectedRideResponse = RideTestUtil.getDefaultRideResponse();
+        RideResponse expectedRideResponse = RideTestUtil.getDefaultAcceptedRideResponse();
 
         when(rideMapper.toModel(any(RideRequest.class))).thenReturn(ride);
         when(rideService.createRide(any(Ride.class))).thenReturn(ride);
@@ -82,7 +82,7 @@ public class RideControllerUnitTest {
     @Test
     public void testChangeRideStatus() {
         Ride ride = RideTestUtil.getDefaultCreatedRide();
-        RideResponse rideResponse = RideTestUtil.getDefaultRideResponse();
+        RideResponse rideResponse = RideTestUtil.getDefaultAcceptedRideResponse();
 
         when(rideService.changeRideStatus(anyLong(), any(RideStatus.class))).thenReturn(ride);
         when(rideMapper.toResponse(any(Ride.class))).thenReturn(rideResponse);

@@ -59,7 +59,7 @@ public class RideTestUtil {
                 .build();
     }
 
-    public RideResponse getDefaultRideResponse() {
+    public RideResponse getDefaultAcceptedRideResponse() {
         return RideResponse.builder()
                 .id(DEFAULT_ID)
                 .passengerId(DEFAULT_PASSENGER_ID)
@@ -68,6 +68,18 @@ public class RideTestUtil {
                 .routeEnd(DEFAULT_ROUTE_END)
                 .dateTimeCreate(DEFAULT_CREATED_AT)
                 .status(ACCEPTED_RIDE_STATUS)
+                .build();
+    }
+
+    public RideResponse getDefaultRideResponse() {
+        return RideResponse.builder()
+                .id(DEFAULT_ID)
+                .passengerId(DEFAULT_PASSENGER_ID)
+                .driverId(DEFAULT_DRIVER_ID)
+                .routeStart(DEFAULT_ROUTE_START)
+                .routeEnd(DEFAULT_ROUTE_END)
+                .dateTimeCreate(DEFAULT_CREATED_AT)
+                .status(CREATED_RIDE_STATUS)
                 .build();
     }
 
