@@ -1,10 +1,7 @@
 package com.software.modsen.rideservice.dto.response;
 
 import com.software.modsen.rideservice.model.RideStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class RideResponse {
     private Long id;
     private Long driverId;

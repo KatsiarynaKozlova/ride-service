@@ -1,5 +1,7 @@
 package com.software.modsen.rideservice.util;
 
+import com.software.modsen.rideservice.dto.request.RideRequest;
+import com.software.modsen.rideservice.dto.response.RideResponse;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
 import lombok.experimental.UtilityClass;
@@ -55,5 +57,26 @@ public class RideTestUtil {
                 .dateTimeCreate(DEFAULT_CREATED_AT)
                 .status(ACCEPTED_RIDE_STATUS)
                 .build();
+    }
+
+    public RideResponse getDefaultRideResponse() {
+        return RideResponse.builder()
+                .id(DEFAULT_ID)
+                .passengerId(DEFAULT_PASSENGER_ID)
+                .driverId(DEFAULT_DRIVER_ID)
+                .routeStart(DEFAULT_ROUTE_START)
+                .routeEnd(DEFAULT_ROUTE_END)
+                .dateTimeCreate(DEFAULT_CREATED_AT)
+                .status(ACCEPTED_RIDE_STATUS)
+                .build();
+    }
+
+    public RideRequest getDefaultRideRequest() {
+        return new RideRequest(
+                DEFAULT_DRIVER_ID,
+                DEFAULT_PASSENGER_ID,
+                DEFAULT_ROUTE_START,
+                DEFAULT_ROUTE_END
+        );
     }
 }
