@@ -12,5 +12,5 @@ import java.util.List;
 @Getter
 @Setter
 public class RideListResponse {
-    private List<RideResponse> rideResponseList;
+    private List<RideResponse> items;
 }

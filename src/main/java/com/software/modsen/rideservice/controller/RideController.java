@@ -96,9 +96,13 @@ public class RideController {
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = RideStatus.class))))
-    @ApiResponse(responseCode = "200", description = "Update Ride",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = RideResponse.class))})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update Ride",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RideResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Ride not found",
+                    content = @Content(schema = @Schema(hidden = true)))
+    })
     public ResponseEntity<RideResponse> changeRideStatus(@PathVariable Long id, @RequestBody RideStatus status) {
         Ride ride = rideService.changeRideStatus(id, status);
         return ResponseEntity.ok(rideMapper.toResponse(ride));
