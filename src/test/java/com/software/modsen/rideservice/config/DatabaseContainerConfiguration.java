@@ -14,10 +14,14 @@ public class DatabaseContainerConfiguration {
 
     @Container
     private static final PostgreSQLContainer<?> postgreSQL =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:16"))
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"))
                     .withDatabaseName("test_db")
                     .withUsername("test")
                     .withPassword("test");
+
+    static {
+        postgreSQL.start();
+    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {

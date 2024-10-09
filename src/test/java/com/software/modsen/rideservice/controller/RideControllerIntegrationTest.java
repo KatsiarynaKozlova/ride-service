@@ -1,6 +1,7 @@
 package com.software.modsen.rideservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.software.modsen.rideservice.config.DatabaseContainerConfiguration;
 import com.software.modsen.rideservice.dto.request.RideRequest;
 import com.software.modsen.rideservice.dto.response.RideResponse;
 import com.software.modsen.rideservice.model.RideStatus;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Import(DatabaseContainerConfiguration.class)
 public class RideControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
