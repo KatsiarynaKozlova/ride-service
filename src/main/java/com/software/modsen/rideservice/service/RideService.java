@@ -31,7 +31,7 @@ public class RideService {
 
     public Ride createRide(Ride ride) {
         ride.setStatus(RideStatus.CREATED);
-        ride.setDateTimeCreate(LocalDateTime.now());
+        ride.setCreatedAt(LocalDateTime.now());
         return rideRepository.save(ride);
     }
 
