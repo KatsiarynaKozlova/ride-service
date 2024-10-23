@@ -27,6 +27,8 @@
         <commons-compress.version>1.27.1</commons-compress.version>
         <junit-jupiter.version>5.11.1</junit-jupiter.version>
         <spring-cloud-contract.version>4.1.4</spring-cloud-contract.version>
+        <micrometer-registry-prometheus.version>1.13.6</micrometer-registry-prometheus.version>
+        <logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
     </properties>
     <dependencies>
         <dependency>
@@ -94,7 +96,7 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>junit-jupiter-api</artifactId>
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
@@ -156,6 +158,24 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>${micrometer-registry-prometheus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
