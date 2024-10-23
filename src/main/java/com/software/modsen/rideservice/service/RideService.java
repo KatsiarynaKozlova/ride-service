@@ -7,6 +7,7 @@ import com.software.modsen.rideservice.repository.RideRepository;
 import com.software.modsen.rideservice.util.ExceptionMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,14 +35,20 @@ public class RideService {
         return rideRepository.save(ride);
     }
 
+    @Transactional
     public Ride changeRideStatus(Long id, RideStatus status) {
-        Ride ride = getByIdOrElseThrow(id);
+        Ride ride = getByIdLockedOrELseThrow(id);
         ride.setStatus(status);
         return rideRepository.save(ride);
     }
 
     private Ride getByIdOrElseThrow(Long id) {
         return rideRepository.findById(id)
+                .orElseThrow(() -> new RideNotFoundException(String.format(ExceptionMessages.RIDE_NOT_FOUND_EXCEPTION, id)));
+    }
+
+    private Ride getByIdLockedOrELseThrow(Long id){
+        return rideRepository.findByIdLocked(id)
                 .orElseThrow(() -> new RideNotFoundException(String.format(ExceptionMessages.RIDE_NOT_FOUND_EXCEPTION, id)));
     }
 }
