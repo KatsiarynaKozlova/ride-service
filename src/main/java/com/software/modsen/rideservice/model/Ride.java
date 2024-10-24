@@ -39,8 +39,8 @@ public class Ride {
     private String routeEnd;
     @Column(name = "price")
     private BigDecimal price;
-    @Column(name = "date_time_create")
-    private LocalDateTime dateTimeCreate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private RideStatus status;

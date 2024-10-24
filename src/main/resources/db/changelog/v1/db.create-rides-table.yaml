@@ -36,6 +36,6 @@ databaseChangeLog:
                   name: price
                   type: decimal
               - column:
-                  name: date_time_create
+                  name: created_at
                   type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP

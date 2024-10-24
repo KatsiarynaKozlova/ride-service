@@ -10,8 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-@UtilityClass
-public class RideTestUtil {
+public final class RideTestUtil {
     public static final Long DEFAULT_ID = 1L;
     public static final Long DEFAULT_PASSENGER_ID = 1L;
     public static final Long DEFAULT_DRIVER_ID = 1L;
@@ -23,7 +22,7 @@ public class RideTestUtil {
     public static final RideStatus ACCEPTED_RIDE_STATUS = RideStatus.ACCEPTED;
     public static final RideStatus CREATED_RIDE_STATUS = RideStatus.CREATED;
 
-    public Ride getDefaultCreatedRide() {
+    public static Ride getDefaultCreatedRide() {
         return Ride.builder()
                 .id(DEFAULT_ID)
                 .passengerId(DEFAULT_PASSENGER_ID)
@@ -35,7 +34,7 @@ public class RideTestUtil {
                 .build();
     }
 
-    public Ride getDefaultPreCreatedRide() {
+    public static Ride getDefaultPreCreatedRide() {
         return Ride.builder()
                 .passengerId(DEFAULT_PASSENGER_ID)
                 .routeStart(DEFAULT_ROUTE_START)
@@ -46,7 +45,7 @@ public class RideTestUtil {
                 .build();
     }
 
-    public Ride getDefaultAcceptedRide() {
+    public static Ride getDefaultAcceptedRide() {
         return Ride.builder()
                 .id(DEFAULT_ID)
                 .driverId(DEFAULT_DRIVER_ID)
@@ -59,7 +58,7 @@ public class RideTestUtil {
                 .build();
     }
 
-    public RideResponse getDefaultAcceptedRideResponse() {
+    public static RideResponse getDefaultAcceptedRideResponse() {
         return RideResponse.builder()
                 .id(DEFAULT_ID)
                 .passengerId(DEFAULT_PASSENGER_ID)
@@ -72,7 +71,7 @@ public class RideTestUtil {
                 .build();
     }
 
-    public RideResponse getDefaultRideResponse() {
+    public static RideResponse getDefaultRideResponse() {
         return RideResponse.builder()
                 .id(DEFAULT_ID)
                 .passengerId(DEFAULT_PASSENGER_ID)
@@ -85,7 +84,7 @@ public class RideTestUtil {
                 .build();
     }
 
-    public RideRequest getDefaultRideRequest() {
+    public static RideRequest getDefaultRideRequest() {
         return new RideRequest(
                 DEFAULT_DRIVER_ID,
                 DEFAULT_PASSENGER_ID,

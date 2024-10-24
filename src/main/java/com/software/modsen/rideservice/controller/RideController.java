@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,7 +89,7 @@ public class RideController {
                 .body(rideMapper.toResponse(newRide));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/status")
     @Operation(description = "Update Ride status ",
             parameters = {@Parameter(name = "id", description = "This is the ride ID that will be updated")},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(

@@ -40,7 +40,7 @@ public class RideServiceComponentTestSteps {
         when(rideRepository.save(any(Ride.class))).thenAnswer(invocation -> {
             Ride savedRide = invocation.getArgument(0);
             savedRide.setStatus(RideStatus.CREATED);
-            savedRide.setDateTimeCreate(LocalDateTime.now());
+            savedRide.setCreatedAt(LocalDateTime.now());
             return savedRide;
         });
         ride = rideService.createRide(ride);

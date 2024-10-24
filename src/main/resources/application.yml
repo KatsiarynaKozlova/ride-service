@@ -16,9 +16,17 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
 eureka:
+  instance:
+    hostname: ride-service
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: prometheus

@@ -111,7 +111,7 @@ public class RideServiceUnitTest {
 
         assertNotNull(resultRide);
         assertEquals(RideStatus.CREATED, resultRide.getStatus());
-        assertNotNull(resultRide.getDateTimeCreate());
+        assertNotNull(resultRide.getCreatedAt());
         verify(repository, times(1)).save(preSavedRide);
     }
 
