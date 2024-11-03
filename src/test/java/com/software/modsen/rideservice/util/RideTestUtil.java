@@ -29,7 +29,7 @@ public final class RideTestUtil {
                 .routeStart(DEFAULT_ROUTE_START)
                 .routeEnd(DEFAULT_ROUTE_END)
                 .price(DEFAULT_PRICE)
-                .dateTimeCreate(DEFAULT_CREATED_AT)
+                .createdAt(DEFAULT_CREATED_AT)
                 .status(CREATED_RIDE_STATUS)
                 .build();
     }
@@ -40,7 +40,7 @@ public final class RideTestUtil {
                 .routeStart(DEFAULT_ROUTE_START)
                 .routeEnd(DEFAULT_ROUTE_END)
                 .price(DEFAULT_PRICE)
-                .dateTimeCreate(DEFAULT_CREATED_AT)
+                .createdAt(DEFAULT_CREATED_AT)
                 .status(CREATED_RIDE_STATUS)
                 .build();
     }
@@ -53,7 +53,7 @@ public final class RideTestUtil {
                 .routeStart(DEFAULT_ROUTE_START)
                 .routeEnd(DEFAULT_ROUTE_END)
                 .price(DEFAULT_PRICE)
-                .dateTimeCreate(DEFAULT_CREATED_AT)
+                .createdAt(DEFAULT_CREATED_AT)
                 .status(ACCEPTED_RIDE_STATUS)
                 .build();
     }
@@ -66,7 +66,7 @@ public final class RideTestUtil {
                 .routeStart(DEFAULT_ROUTE_START)
                 .routeEnd(DEFAULT_ROUTE_END)
                 .price(DEFAULT_PRICE)
-                .dateTimeCreate(DEFAULT_CREATED_AT)
+                .createdAt(DEFAULT_CREATED_AT)
                 .status(ACCEPTED_RIDE_STATUS)
                 .build();
     }
@@ -79,7 +79,7 @@ public final class RideTestUtil {
                 .routeStart(DEFAULT_ROUTE_START)
                 .routeEnd(DEFAULT_ROUTE_END)
                 .price(DEFAULT_PRICE)
-                .dateTimeCreate(DEFAULT_CREATED_AT)
+                .createdAt(DEFAULT_CREATED_AT)
                 .status(CREATED_RIDE_STATUS)
                 .build();
     }
