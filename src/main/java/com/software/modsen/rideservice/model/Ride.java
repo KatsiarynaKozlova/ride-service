@@ -30,9 +30,9 @@ public class Ride {
     @Column(name = "ride_id")
     private Long id;
     @Column(name = "driver_id")
-    private Long driverId;
+    private String driverId;
     @Column(name = "passenger_id")
-    private Long passengerId;
+    private String passengerId;
     @Column(name = "route_start")
     private String routeStart;
     @Column(name = "route_end")

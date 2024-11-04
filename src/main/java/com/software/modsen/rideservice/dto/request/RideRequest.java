@@ -6,8 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class RideRequest {
-    private Long driverId;
-    private Long passengerId;
     private String routeStart;
     private String routeEnd;
 }
