@@ -47,19 +47,15 @@ public class JwtAuthenticationConverterRide implements Converter<Jwt, AbstractAu
     }
 
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
-        Map<String, List<String>> resourceAccess = jwt.getClaim(SecurityConstants.REALM_ACCESS);
+        Map<String, List<String>> resourceAccess = jwt.getClaim("realm_access");
+        List<String> resourceRoles;
 
-        if (resourceAccess == null) {
-            return Set.of();
-        }
-
-        List<String> resourceRoles = resourceAccess.get(SecurityConstants.ROLES);
-        if (resourceRoles == null) {
+        if (resourceAccess == null || (resourceRoles = resourceAccess.get("roles")) == null) {
             return Set.of();
         }
 
         return resourceRoles.stream()
-                .map(role -> new SimpleGrantedAuthority(SecurityConstants.PREFIX_ROLE + role))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
     }
 }
