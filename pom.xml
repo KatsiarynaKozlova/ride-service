@@ -29,6 +29,7 @@
         <spring-cloud-contract.version>4.1.4</spring-cloud-contract.version>
         <micrometer-registry-prometheus.version>1.13.6</micrometer-registry-prometheus.version>
         <logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
+        <spring-cloud-starter-security.version>2.2.5.RELEASE</spring-cloud-starter-security.version>
     </properties>
     <dependencies>
         <dependency>
@@ -188,7 +189,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-security</artifactId>
-            <version>2.2.5.RELEASE</version>
+            <version>${spring-cloud-starter-security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
