@@ -15,12 +15,12 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: passenger_id
-                  type: bigint
+                  type: varchar(60)
                   constraints:
                     nullable: false
               - column:
                   name: driver_id
-                  type: bigint
+                  type: varchar(60)
               - column:
                   name: route_start
                   type: varchar(255)

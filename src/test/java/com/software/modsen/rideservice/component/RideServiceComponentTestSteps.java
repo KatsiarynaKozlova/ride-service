@@ -66,7 +66,7 @@ public class RideServiceComponentTestSteps {
         ride.setRouteStart("Point A");
         ride.setRouteEnd("Point B");
         ride.setStatus(RideStatus.valueOf(status));
-        ride.setDateTimeCreate(LocalDateTime.now());
+        ride.setCreatedAt(LocalDateTime.now());
         when(rideRepository.findById(ride.getId())).thenReturn(Optional.of(ride));
     }
 
@@ -89,7 +89,7 @@ public class RideServiceComponentTestSteps {
         ride.setPassengerId(2L);
         ride.setRouteStart("Point A");
         ride.setRouteEnd("Point B");
-        ride.setDateTimeCreate(LocalDateTime.now());
+        ride.setCreatedAt(LocalDateTime.now());
 
         when(rideRepository.findById(ride.getId())).thenReturn(Optional.of(ride));
     }

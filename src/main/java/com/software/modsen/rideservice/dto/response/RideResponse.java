@@ -17,11 +17,11 @@ import java.time.LocalDateTime;
 @Builder
 public class RideResponse {
     private Long id;
-    private Long driverId;
-    private Long passengerId;
+    private String driverId;
+    private String passengerId;
     private String routeStart;
     private String routeEnd;
     private BigDecimal price;
-    private LocalDateTime dateTimeCreate;
+    private LocalDateTime createdAt;
     private RideStatus status;
 }

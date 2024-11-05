@@ -15,6 +15,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8100/realms/cab-aggregator-realm
+          jwk-set-uri: http://localhost:8100/realms/cab-aggregator-realm/protocol/openid-connect/certs
 eureka:
   instance:
     hostname: ride-service
@@ -30,3 +36,6 @@ management:
     web:
       exposure:
         include: prometheus
+  tracing:
+    sampling:
+      probability: 1.0

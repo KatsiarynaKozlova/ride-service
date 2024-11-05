@@ -6,6 +6,7 @@ import com.software.modsen.rideservice.dto.response.RideResponse;
 import com.software.modsen.rideservice.mapper.RideMapper;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
+import com.software.modsen.rideservice.security.User;
 import com.software.modsen.rideservice.service.RideService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,6 +18,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +38,7 @@ public class RideController {
     private final RideService rideService;
     private final RideMapper rideMapper;
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping
     @Operation(description = "Get list of all existing rides ")
     @ApiResponse(responseCode = "200", description = "List of all Rides",
@@ -62,6 +66,7 @@ public class RideController {
         return ResponseEntity.ok(rideResponse);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER','ROLE_ADMIN')")
     @GetMapping("/free")
     @Operation(description = "Get list of all free rides(without driver) ")
     @ApiResponse(responseCode = "200", description = "List of all Rides without drivers",
@@ -73,6 +78,7 @@ public class RideController {
         return ResponseEntity.ok(new RideListResponse(rideResponseList));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PASSENGER','ROLE_ADMIN')")
     @PostMapping
     @Operation(description = "Create new ride with status Created ",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -83,6 +89,8 @@ public class RideController {
                     schema = @Schema(implementation = RideResponse.class))})
     public ResponseEntity<RideResponse> createRide(@RequestBody RideRequest rideRequest) {
         Ride ride = rideMapper.toModel(rideRequest);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ride.setPassengerId(user.getId().toString());
         Ride newRide = rideService.createRide(ride);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
