@@ -1,6 +1,7 @@
 package com.software.modsen.rideservice.security;
 
 import com.software.modsen.rideservice.util.SecurityConstants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Component
 public class JwtAuthenticationConverterRide implements Converter<Jwt, AbstractAuthenticationToken> {
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -29,7 +31,7 @@ public class JwtAuthenticationConverterRide implements Converter<Jwt, AbstractAu
                 extractResourceRoles(jwt).stream()).collect(Collectors.toSet());
 
         User user = extractUserInfo(jwt);
-
+        log.info(user.getId().toString());
         return new UsernamePasswordAuthenticationToken(
                 user,
                 null,
@@ -40,7 +42,7 @@ public class JwtAuthenticationConverterRide implements Converter<Jwt, AbstractAu
     private User extractUserInfo(Jwt jwt) {
         return User.builder()
                 .phone(jwt.getClaim(SecurityConstants.USER_FIELD_PHONE))
-                .id(UUID.fromString(jwt.getClaim(SecurityConstants.TOKEN_FIELD_ID)))
+                .id(jwt.getClaim(SecurityConstants.USER_FIELD_ID))
                 .email(jwt.getClaim(SecurityConstants.USER_FIELD_EMAIL))
                 .username(jwt.getClaim(SecurityConstants.TOKEN_FIELD_USERNAME))
                 .build();

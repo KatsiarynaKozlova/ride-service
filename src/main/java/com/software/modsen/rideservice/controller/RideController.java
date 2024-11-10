@@ -90,7 +90,7 @@ public class RideController {
     public ResponseEntity<RideResponse> createRide(@RequestBody RideRequest rideRequest) {
         Ride ride = rideMapper.toModel(rideRequest);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ride.setPassengerId(user.getId().toString());
+        ride.setPassengerId(user.getId());
         Ride newRide = rideService.createRide(ride);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

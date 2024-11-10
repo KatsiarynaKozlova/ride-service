@@ -17,7 +17,7 @@ import java.util.UUID;
 @Setter
 public class User implements UserDetails, OAuth2User {
 
-    private UUID id;
+    private Long id;
     private String username;
     private String phone;
     private String email;
