@@ -86,8 +86,6 @@ public final class RideTestUtil {
 
     public static RideRequest getDefaultRideRequest() {
         return new RideRequest(
-                DEFAULT_DRIVER_ID,
-                DEFAULT_PASSENGER_ID,
                 DEFAULT_ROUTE_START,
                 DEFAULT_ROUTE_END
         );

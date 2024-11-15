@@ -78,6 +78,14 @@ public class RideController {
         return ResponseEntity.ok(new RideListResponse(rideResponseList));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER','ROLE_ADMIN')")
+    @PostMapping("/accept/{id}")
+    public ResponseEntity<RideResponse> acceptRide(@PathVariable Long id){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Ride acceptedRide = rideService.acceptRide(id, user.getId());
+        return ResponseEntity.ok().body(rideMapper.toResponse(acceptedRide));
+    }
+
     @PreAuthorize("hasAnyRole('ROLE_PASSENGER','ROLE_ADMIN')")
     @PostMapping
     @Operation(description = "Create new ride with status Created ",
@@ -90,7 +98,7 @@ public class RideController {
     public ResponseEntity<RideResponse> createRide(@RequestBody RideRequest rideRequest) {
         Ride ride = rideMapper.toModel(rideRequest);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ride.setPassengerId(user.getId().toString());
+        ride.setPassengerId(user.getId());
         Ride newRide = rideService.createRide(ride);
         return ResponseEntity
                 .status(HttpStatus.CREATED)

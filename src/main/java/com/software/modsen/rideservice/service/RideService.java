@@ -46,6 +46,12 @@ public class RideService {
         return newRide;
     }
 
+    public Ride acceptRide(Long rideId, Long driverId){
+        Ride ride = getByIdOrElseThrow(rideId);
+        ride.setDriverId(driverId);
+        return rideRepository.save(ride);
+    }
+
     @Transactional
     public Ride changeRideStatus(Long id, RideStatus status) {
         Ride ride = getByIdLockedOrELseThrow(id);
