@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -44,10 +46,13 @@ public class RideController {
     @ApiResponse(responseCode = "200", description = "List of all Rides",
             content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = RideListResponse.class))})
-    public ResponseEntity<RideListResponse> getAllRides() {
-        List<Ride> rideList = rideService.gelAllRides();
-        List<RideResponse> rideResponseList = rideMapper.toRideResponseList(rideList);
-        return ResponseEntity.ok(new RideListResponse(rideResponseList));
+    public Mono<ResponseEntity<RideListResponse>> getAllRides() {
+        return rideService.getAllRides()
+                .collectList()
+                .map(rideList -> {
+                    List<RideResponse> rideResponseList = rideMapper.toRideResponseList(rideList);
+                    return ResponseEntity.ok(new RideListResponse(rideResponseList));
+                });
     }
 
     @GetMapping("/{id}")
@@ -60,10 +65,9 @@ public class RideController {
             @ApiResponse(responseCode = "404", description = "Ride not found",
                     content = @Content(schema = @Schema(hidden = true)))}
     )
-    public ResponseEntity<RideResponse> getRideById(@PathVariable Long id) {
-        Ride ride = rideService.getRide(id);
-        RideResponse rideResponse = rideMapper.toResponse(ride);
-        return ResponseEntity.ok(rideResponse);
+    public Mono<ResponseEntity<RideResponse>> getRideById(@PathVariable Long id) {
+        return rideService.getRide(id)
+                .map(ride -> ResponseEntity.ok(rideMapper.toResponse(ride)));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_DRIVER','ROLE_ADMIN')")
@@ -72,18 +76,21 @@ public class RideController {
     @ApiResponse(responseCode = "200", description = "List of all Rides without drivers",
             content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = RideListResponse.class))})
-    public ResponseEntity<RideListResponse> gelAllFreeRides() {
-        List<Ride> rideList = rideService.getAllCreatedRides();
-        List<RideResponse> rideResponseList = rideMapper.toRideResponseList(rideList);
-        return ResponseEntity.ok(new RideListResponse(rideResponseList));
+    public Mono<ResponseEntity<RideListResponse>> gelAllFreeRides() {
+        return rideService.getAllCreatedRides()
+                .collectList()
+                .map(rideList -> {
+                    List<RideResponse> rideResponseList = rideMapper.toRideResponseList(rideList);
+                    return ResponseEntity.ok(new RideListResponse(rideResponseList));
+                });
     }
 
     @PreAuthorize("hasAnyRole('ROLE_DRIVER','ROLE_ADMIN')")
     @PostMapping("/accept/{id}")
-    public ResponseEntity<RideResponse> acceptRide(@PathVariable Long id){
+    public Mono<ResponseEntity<RideResponse>> acceptRide(@PathVariable Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Ride acceptedRide = rideService.acceptRide(id, user.getId());
-        return ResponseEntity.ok().body(rideMapper.toResponse(acceptedRide));
+        return rideService.acceptRide(id, user.getId())
+                .map(acceptedRide -> ResponseEntity.ok().body(rideMapper.toResponse(acceptedRide)));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_PASSENGER','ROLE_ADMIN')")
@@ -95,14 +102,14 @@ public class RideController {
     @ApiResponse(responseCode = "200", description = "Create Ride",
             content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = RideResponse.class))})
-    public ResponseEntity<RideResponse> createRide(@RequestBody RideRequest rideRequest) {
+    public Mono<ResponseEntity<RideResponse>> createRide(@RequestBody RideRequest rideRequest) {
         Ride ride = rideMapper.toModel(rideRequest);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ride.setPassengerId(user.getId());
-        Ride newRide = rideService.createRide(ride);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(rideMapper.toResponse(newRide));
+        return rideService.createRide(ride)
+                .map(savedRide -> ResponseEntity
+                        .status(HttpStatus.CREATED)
+                        .body(rideMapper.toResponse(savedRide)));
     }
 
     @PutMapping("/{id}/status")
@@ -118,8 +125,8 @@ public class RideController {
             @ApiResponse(responseCode = "404", description = "Ride not found",
                     content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseEntity<RideResponse> changeRideStatus(@PathVariable Long id, @RequestBody RideStatus status) {
-        Ride ride = rideService.changeRideStatus(id, status);
-        return ResponseEntity.ok(rideMapper.toResponse(ride));
+    public Mono<ResponseEntity<RideResponse>> changeRideStatus(@PathVariable Long id, @RequestBody RideStatus status) {
+        return rideService.changeRideStatus(id, status)
+                .map(updatedRide -> ResponseEntity.ok(rideMapper.toResponse(updatedRide)));
     }
 }

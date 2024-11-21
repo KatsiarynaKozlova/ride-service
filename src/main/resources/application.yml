@@ -3,18 +3,20 @@ server:
 spring:
   application:
     name: ride-service
-  datasource:
-    driver-class-name: org.postgresql.Driver
+  r2dbc:
     username: ${POSTGRESQL_USERNAME}
     password: ${POSTGRESQL_PASSWORD}
-    url: jdbc:postgresql://localhost:5432/ride_db
+    url: r2dbc:postgresql://localhost:5432/ride_db
   jpa:
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
+    url: jdbc:postgresql://localhost:5432/ride_db
     change-log: classpath:/db/changelog/db.changelog-master.xml
+    password: ${POSTGRESQL_PASSWORD}
+    user: ${POSTGRESQL_USERNAME}
   security:
     oauth2:
       resourceserver:
