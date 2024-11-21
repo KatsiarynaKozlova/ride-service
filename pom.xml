@@ -31,6 +31,7 @@
         <logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
         <spring-cloud-starter-security.version>2.2.5.RELEASE</spring-cloud-starter-security.version>
         <r2dbc-postgresql.version>1.0.7.RELEASE</r2dbc-postgresql.version>
+        <reactor-test.version>3.7.0</reactor-test.version>
     </properties>
     <dependencies>
         <dependency>
@@ -200,6 +201,12 @@
             <artifactId>r2dbc-postgresql</artifactId>
             <version>${r2dbc-postgresql.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <version>${reactor-test.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

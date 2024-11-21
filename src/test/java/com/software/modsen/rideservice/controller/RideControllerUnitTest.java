@@ -2,7 +2,6 @@ package com.software.modsen.rideservice.controller;
 
 import com.software.modsen.rideservice.dto.response.RideListResponse;
 import com.software.modsen.rideservice.dto.response.RideResponse;
-import com.software.modsen.rideservice.dto.request.RideRequest;
 import com.software.modsen.rideservice.mapper.RideMapper;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
@@ -15,6 +14,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.List;
 
@@ -39,43 +41,38 @@ public class RideControllerUnitTest {
     @Test
     public void testGetAllRides() {
         List<Ride> rideList = List.of(RideTestUtil.getDefaultAcceptedRide());
-        when(rideService.gelAllRides()).thenReturn(rideList);
+        List<RideResponse> rideResponseList = List.of(RideTestUtil.getDefaultRideResponse());
+        RideListResponse expectedResponse = new RideListResponse(rideResponseList);
 
-        ResponseEntity<RideListResponse> response = rideController.getAllRides();
+        when(rideService.getAllRides()).thenReturn(Flux.fromIterable(rideList));
+        when(rideMapper.toRideResponseList(rideList)).thenReturn(rideResponseList);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(rideService, times(1)).gelAllRides();
+        Mono<ResponseEntity<RideListResponse>> responseRides = rideController.getAllRides();
+
+        StepVerifier.create(responseRides).assertNext(response -> {
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+        }).verifyComplete();
+
+        verify(rideService, times(1)).getAllRides();
+        verify(rideMapper, times(1)).toRideResponseList(rideList);
     }
 
     @Test
     public void testGetRideById() {
         Ride ride = RideTestUtil.getDefaultAcceptedRide();
         RideResponse rideResponse = RideTestUtil.getDefaultAcceptedRideResponse();
-        when(rideService.getRide(anyLong())).thenReturn(ride);
+        when(rideService.getRide(anyLong())).thenReturn(Mono.just(ride));
         when(rideMapper.toResponse(any(Ride.class))).thenReturn(rideResponse);
 
-        ResponseEntity<RideResponse> resultResponse = rideController.getRideById(1L);
+        Mono<ResponseEntity<RideResponse>> resultResponse = rideController.getRideById(1L);
+
+        StepVerifier.create(resultResponse).assertNext(response -> {
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(rideResponse, response.getBody());
+        }).verifyComplete();
 
         verify(rideService, times(1)).getRide(1L);
-        assertEquals(HttpStatus.OK, resultResponse.getStatusCode());
-        assertEquals(rideResponse, resultResponse.getBody());
-    }
-
-    @Test
-    public void testCreateRide() {
-        Ride ride = RideTestUtil.getDefaultCreatedRide();
-        RideRequest rideRequest = RideTestUtil.getDefaultRideRequest();
-        RideResponse expectedRideResponse = RideTestUtil.getDefaultAcceptedRideResponse();
-
-        when(rideMapper.toModel(any(RideRequest.class))).thenReturn(ride);
-        when(rideService.createRide(any(Ride.class))).thenReturn(ride);
-        when(rideMapper.toResponse(any(Ride.class))).thenReturn(expectedRideResponse);
-
-        ResponseEntity<RideResponse> resultResponse = rideController.createRide(rideRequest);
-
-        assertEquals(HttpStatus.CREATED, resultResponse.getStatusCode());
-        assertEquals(expectedRideResponse, resultResponse.getBody());
-        verify(rideService, times(1)).createRide(ride);
+        verify(rideMapper, times(1)).toResponse(ride);
     }
 
     @Test
@@ -83,12 +80,16 @@ public class RideControllerUnitTest {
         Ride ride = RideTestUtil.getDefaultCreatedRide();
         RideResponse rideResponse = RideTestUtil.getDefaultAcceptedRideResponse();
 
-        when(rideService.changeRideStatus(anyLong(), any(RideStatus.class))).thenReturn(ride);
+        when(rideService.changeRideStatus(anyLong(), any(RideStatus.class))).thenReturn(Mono.just(ride));
         when(rideMapper.toResponse(any(Ride.class))).thenReturn(rideResponse);
-        ResponseEntity<RideResponse> response = rideController.changeRideStatus(DEFAULT_ID, ACCEPTED_RIDE_STATUS);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(rideResponse, response.getBody());
+        Mono<ResponseEntity<RideResponse>> resultResponse = rideController.changeRideStatus(DEFAULT_ID, ACCEPTED_RIDE_STATUS);
+
+        StepVerifier.create(resultResponse).assertNext(response -> {
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals(rideResponse, response.getBody());
+        }).verifyComplete();
+
         verify(rideService, times(1)).changeRideStatus(DEFAULT_ID, ACCEPTED_RIDE_STATUS);
     }
 }
