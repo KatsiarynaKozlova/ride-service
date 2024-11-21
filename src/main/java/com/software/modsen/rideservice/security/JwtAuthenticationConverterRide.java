@@ -1,7 +1,6 @@
 package com.software.modsen.rideservice.security;
 
 import com.software.modsen.rideservice.util.SecurityConstants;
-import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
