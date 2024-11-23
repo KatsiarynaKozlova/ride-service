@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Mono;
 
 import static org.mockito.Mockito.when;
 
@@ -30,7 +31,7 @@ public class RideBaseContractTest {
     @BeforeEach
     public void setup() {
         Ride ride = RideTestUtil.getDefaultAcceptedRide();
-        when(rideService.getRide(1L)).thenReturn(ride);
+        when(rideService.getRide(1L)).thenReturn(Mono.just(ride));
         when(rideMapper.toResponse(ride)).thenReturn(RideTestUtil.getDefaultAcceptedRideResponse());
         when(rideService.getRide(99L)).thenThrow(new RideNotFoundException(String.format(ExceptionMessages.RIDE_NOT_FOUND_EXCEPTION, 99L)));
         RestAssuredMockMvc.standaloneSetup(this.rideController);

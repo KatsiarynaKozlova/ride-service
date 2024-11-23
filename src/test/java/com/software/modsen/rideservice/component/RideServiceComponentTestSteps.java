@@ -11,11 +11,11 @@ import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +26,7 @@ public class RideServiceComponentTestSteps {
     @Mock
     private RideRepository rideRepository;
     private Ride ride = new Ride();
+    private Mono<Ride> mRide;
 
     @Given("Ride request with driverId {long}, passengerId {long}, routeStart {string}, and routeEnd {string}")
     public void rideRequestWithDriverIdPassengerIdRouteStartAndRouteEnd(Long driverId, Long passengerId, String routeStart, String routeEnd) {
@@ -41,20 +42,23 @@ public class RideServiceComponentTestSteps {
             Ride savedRide = invocation.getArgument(0);
             savedRide.setStatus(RideStatus.CREATED);
             savedRide.setCreatedAt(LocalDateTime.now());
-            return savedRide;
+            return Mono.just(savedRide);
         });
-        ride = rideService.createRide(ride);
+        mRide = rideService.createRide(ride);
     }
 
     @Then("the ride should have status {string}")
     public void theRideShouldHaveStatus(String status) {
-        assertEquals(RideStatus.valueOf(status), ride.getStatus());
+        StepVerifier.create(mRide)
+                .expectNextMatches(ride -> ride.getStatus() == RideStatus.valueOf(status))
+                .verifyComplete();
     }
 
     @And("the ride should have driverId {long} and passengerId {long}")
     public void theRideShouldHaveDriverIdAndPassengerId(Long driverId, Long passengerId) {
-        assertEquals(driverId, ride.getDriverId());
-        assertEquals(passengerId, ride.getPassengerId());
+        StepVerifier.create(mRide)
+                .expectNextMatches(ride -> ride.getPassengerId().equals(passengerId) && ride.getDriverId().equals(driverId))
+                .verifyComplete();
     }
 
     @Given("an existing ride with id {long} and status {string}")
@@ -67,7 +71,7 @@ public class RideServiceComponentTestSteps {
         ride.setRouteEnd("Point B");
         ride.setStatus(RideStatus.valueOf(status));
         ride.setCreatedAt(LocalDateTime.now());
-        when(rideRepository.findById(ride.getId())).thenReturn(Optional.of(ride));
+        when(rideRepository.findByIdLocked(ride.getId())).thenReturn(Mono.just(ride));
     }
 
     @When("the ride status is changed to {string}")
@@ -75,10 +79,10 @@ public class RideServiceComponentTestSteps {
         when(rideRepository.save(any(Ride.class))).thenAnswer(invocation -> {
             Ride savedRide = invocation.getArgument(0);
             savedRide.setStatus(RideStatus.valueOf(newStatus));
-            return savedRide;
+            return Mono.just(savedRide);
         });
 
-        ride = rideService.changeRideStatus(ride.getId(), RideStatus.valueOf(newStatus));
+        mRide = rideService.changeRideStatus(ride.getId(), RideStatus.valueOf(newStatus));
     }
 
     @Given("an existing ride with id {long}")
@@ -91,18 +95,19 @@ public class RideServiceComponentTestSteps {
         ride.setRouteEnd("Point B");
         ride.setCreatedAt(LocalDateTime.now());
 
-        when(rideRepository.findById(ride.getId())).thenReturn(Optional.of(ride));
+        when(rideRepository.findById(ride.getId())).thenReturn(Mono.just(ride));
     }
 
     @When("the id {long} is passed to the findById method")
     public void theIdIsPassedToTheFindByIdMethod(Long id) {
-        when(rideRepository.findById(id)).thenReturn(Optional.of(ride));
-
-        ride = rideService.getRide(id);
+        when(rideRepository.findById(id)).thenReturn(Mono.just(ride));
+        mRide = rideService.getRide(id);
     }
 
     @Then("The response should contain ride with id {long}")
     public void theResponseShouldContainRideWithId(Long id) {
-        assertEquals(id, ride.getDriverId());
+        StepVerifier.create(mRide)
+                .expectNextMatches(ride -> ride.getDriverId().equals(id))
+                .verifyComplete();
     }
 }

@@ -4,7 +4,6 @@ import com.software.modsen.rideservice.dto.request.RideRequest;
 import com.software.modsen.rideservice.dto.response.RideResponse;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
-import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

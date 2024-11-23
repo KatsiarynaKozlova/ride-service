@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: rides
             columns:
               - column:
-                  name: ride_id
+                  name: id
                   type: bigint
                   autoIncrement: true
                   constraints:

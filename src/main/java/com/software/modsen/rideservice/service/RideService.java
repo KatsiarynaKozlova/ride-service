@@ -10,9 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -20,54 +21,54 @@ import java.util.List;
 public class RideService {
     private final RideRepository rideRepository;
 
-    public Ride getRide(Long id) {
-        Ride ride = getByIdOrElseThrow(id);
+    public Mono<Ride> getRide(Long id) {
+        Mono<Ride> ride = getByIdOrElseThrow(id);
         log.info(String.format(LogInfoMessages.GET_RIDE_BY_ID, id));
         return ride;
     }
 
-    public List<Ride> gelAllRides() {
-        List<Ride> rides = rideRepository.findAll();
+    public Flux<Ride> getAllRides() {
+        Flux<Ride> rides = rideRepository.findAll();
         log.info(LogInfoMessages.GET_LIST_OF_RIDES);
         return rides;
     }
 
-    public List<Ride> getAllCreatedRides() {
-        List<Ride> rides = rideRepository.getRidesByStatusIs(RideStatus.CREATED);
+    public Flux<Ride> getAllCreatedRides() {
+        Flux<Ride> rides = rideRepository.getRidesByStatusIs(RideStatus.CREATED);
         log.info(LogInfoMessages.GET_LIST_OF_CREATED_RIDES);
         return rides;
     }
 
-    public Ride createRide(Ride ride) {
+    public Mono<Ride> createRide(Ride ride) {
         ride.setStatus(RideStatus.CREATED);
         ride.setCreatedAt(LocalDateTime.now());
-        Ride newRide = rideRepository.save(ride);
-        log.info(String.format(LogInfoMessages.CREATE_RIDE_WITH_ID, newRide.getId()));
-        return newRide;
+        return rideRepository.save(ride)
+                .doOnNext(newRide -> log.info(String.format(LogInfoMessages.CREATE_RIDE_WITH_ID, newRide.getId())));
     }
 
-    public Ride acceptRide(Long rideId, Long driverId){
-        Ride ride = getByIdOrElseThrow(rideId);
-        ride.setDriverId(driverId);
-        return rideRepository.save(ride);
+    public Mono<Ride> acceptRide(Long rideId, Long driverId) {
+        return getByIdOrElseThrow(rideId).flatMap(updetedRide -> {
+            updetedRide.setDriverId(driverId);
+            return rideRepository.save(updetedRide);
+        });
     }
 
     @Transactional
-    public Ride changeRideStatus(Long id, RideStatus status) {
-        Ride ride = getByIdLockedOrELseThrow(id);
-        ride.setStatus(status);
-        Ride updatedRide = rideRepository.save(ride);
-        log.info(String.format(LogInfoMessages.UPDATE_RIDE_STATUS, updatedRide.getId()));
-        return updatedRide;
+    public Mono<Ride> changeRideStatus(Long id, RideStatus status) {
+        return getByIdLockedOrElseThrow(id).flatMap(ride -> {
+            ride.setStatus(status);
+            return rideRepository.save(ride)
+                    .doOnSuccess(updatedRide -> log.info(String.format(LogInfoMessages.UPDATE_RIDE_STATUS, updatedRide.getId())));
+        });
     }
 
-    private Ride getByIdOrElseThrow(Long id) {
+    private Mono<Ride> getByIdOrElseThrow(Long id) {
         return rideRepository.findById(id)
-                .orElseThrow(() -> new RideNotFoundException(String.format(ExceptionMessages.RIDE_NOT_FOUND_EXCEPTION, id)));
+                .switchIfEmpty(Mono.error(new RideNotFoundException(String.format(ExceptionMessages.RIDE_NOT_FOUND_EXCEPTION, id))));
     }
 
-    private Ride getByIdLockedOrELseThrow(Long id) {
+    private Mono<Ride> getByIdLockedOrElseThrow(Long id) {
         return rideRepository.findByIdLocked(id)
-                .orElseThrow(() -> new RideNotFoundException(String.format(ExceptionMessages.RIDE_NOT_FOUND_EXCEPTION, id)));
+                .switchIfEmpty(Mono.error(new RideNotFoundException(String.format(ExceptionMessages.RIDE_NOT_FOUND_EXCEPTION, id))));
     }
 }
