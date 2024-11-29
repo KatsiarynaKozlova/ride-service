@@ -1,5 +1,6 @@
 package com.software.modsen.rideservice.exception.handler;
 
+import com.software.modsen.rideservice.exception.EmailSendingException;
 import com.software.modsen.rideservice.exception.RideNotFoundException;
 import org.modelmapper.spi.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,12 @@ public class ExceptionApiHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ErrorMessage(exception.getMessage()));
+    }
 
+    @ExceptionHandler(EmailSendingException.class)
+    public ResponseEntity<ErrorMessage> emailException(RuntimeException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FAILED_DEPENDENCY)
+                .body(new ErrorMessage(exception.getMessage()));
     }
 }

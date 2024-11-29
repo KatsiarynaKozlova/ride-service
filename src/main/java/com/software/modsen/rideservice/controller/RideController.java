@@ -1,12 +1,15 @@
 package com.software.modsen.rideservice.controller;
 
+import com.software.modsen.rideservice.dto.request.RideFilterRequest;
 import com.software.modsen.rideservice.dto.request.RideRequest;
+import com.software.modsen.rideservice.dto.response.InfoResponse;
 import com.software.modsen.rideservice.dto.response.RideListResponse;
 import com.software.modsen.rideservice.dto.response.RideResponse;
 import com.software.modsen.rideservice.mapper.RideMapper;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
 import com.software.modsen.rideservice.security.User;
+import com.software.modsen.rideservice.service.GmailSenderService;
 import com.software.modsen.rideservice.service.RideService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,6 +34,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static com.software.modsen.rideservice.util.GmailSenderConstants.EMAIL_SEND_SUCCESSFULLY;
+
 @RestController
 @RequestMapping("/rides")
 @RequiredArgsConstructor
@@ -38,6 +43,7 @@ import java.util.List;
 public class RideController {
     private final RideService rideService;
     private final RideMapper rideMapper;
+    private final GmailSenderService senderService;
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping
@@ -127,5 +133,13 @@ public class RideController {
     public Mono<ResponseEntity<RideResponse>> changeRideStatus(@PathVariable Long id, @RequestBody RideStatus status) {
         return rideService.changeRideStatus(id, status)
                 .map(updatedRide -> ResponseEntity.ok(rideMapper.toResponse(updatedRide)));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PostMapping("/filter")
+    public Mono<ResponseEntity<InfoResponse>> generateRideStats(@RequestBody RideFilterRequest filterRequest) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        senderService.sendEmail(user.getEmail(), filterRequest);
+        return Mono.just(ResponseEntity.ok(new InfoResponse(EMAIL_SEND_SUCCESSFULLY)));
     }
 }
