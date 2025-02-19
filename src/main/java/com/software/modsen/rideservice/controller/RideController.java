@@ -136,7 +136,7 @@ public class RideController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_DRIVER')")
-    @PutMapping("/finish/{id}")
+    @PostMapping("/finish/{id}")
     @Operation(description = "Finish ride ",
             parameters = {@Parameter(name = "id", description = "This is the ride ID that will be updated")})
     @ApiResponses(value = {

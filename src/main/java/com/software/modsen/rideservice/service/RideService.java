@@ -53,7 +53,7 @@ public class RideService {
         });
     }
 
-    @Transactional
+    @Transactional(transactionManager = "transactionManager")
     public Mono<Ride> changeRideStatus(Long id, RideStatus status) {
         return getByIdLockedOrElseThrow(id).flatMap(ride -> {
             ride.setStatus(status);
@@ -62,7 +62,7 @@ public class RideService {
         });
     }
 
-    @Transactional
+    @Transactional(transactionManager = "transactionManager")
     public Mono<Ride> finishRide(Long id) {
         return getByIdLockedOrElseThrow(id).flatMap(ride -> {
             ride.setStatus(RideStatus.CANCELED);

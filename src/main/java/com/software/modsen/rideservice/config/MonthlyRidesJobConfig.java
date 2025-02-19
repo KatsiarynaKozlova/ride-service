@@ -93,15 +93,7 @@ public class MonthlyRidesJobConfig {
     }
 
     private void updateOrInsertMonthlyRide(MonthlyRide newMonthlyRide) {
-        Optional<MonthlyRide> monthlyRide = monthlyRideRepository
-                .findByDriverIdAndMonthYear(newMonthlyRide.getDriverId(), newMonthlyRide.getMonthYear());
-        if (monthlyRide.isPresent()) {
-            MonthlyRide existingMonthlyRide = monthlyRide.get();
-            existingMonthlyRide.setTripCount(existingMonthlyRide.getTripCount() + 1);
-            monthlyRideRepository.save(existingMonthlyRide);
-        } else {
-            monthlyRideRepository.save(newMonthlyRide);
-        }
+        monthlyRideRepository.upsertMonthRide(newMonthlyRide.getDriverId(), newMonthlyRide.getMonthYear());
     }
 
     private List<Ride> fetchListOfRecentRides() {
