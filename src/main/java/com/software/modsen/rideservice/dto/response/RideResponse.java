@@ -23,5 +23,6 @@ public class RideResponse {
     private String routeEnd;
     private BigDecimal price;
     private LocalDateTime createdAt;
+    private LocalDateTime finishedAt;
     private RideStatus status;
 }
