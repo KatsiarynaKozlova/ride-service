@@ -3,7 +3,7 @@ package com.software.modsen.rideservice.service;
 import com.software.modsen.rideservice.exception.RideNotFoundException;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
-import com.software.modsen.rideservice.repository.RideRepository;
+import com.software.modsen.rideservice.repository.reactive.RideRepository;
 import com.software.modsen.rideservice.util.RideTestUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

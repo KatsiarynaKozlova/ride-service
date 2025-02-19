@@ -19,8 +19,10 @@ public class RideSecurityConfig {
                         -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtAuthenticationConverterRide()))
                 )
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.GET, "/actuator/**")
-                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest()
                         .authenticated()
                 );

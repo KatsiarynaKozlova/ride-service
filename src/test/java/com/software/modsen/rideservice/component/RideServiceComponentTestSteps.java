@@ -2,7 +2,7 @@ package com.software.modsen.rideservice.component;
 
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
-import com.software.modsen.rideservice.repository.RideRepository;
+import com.software.modsen.rideservice.repository.reactive.RideRepository;
 import com.software.modsen.rideservice.service.RideService;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
