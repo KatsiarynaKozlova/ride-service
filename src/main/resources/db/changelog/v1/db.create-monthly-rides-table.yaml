@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Katsiaryna
+      changes:
+        - createTable:
+            tableName: monthly_rides
+            columns:
+              - column:
+                  name: ride_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: month_year
+                  type: varchar(7)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: trip_count
+                  type: bigint
+                  defaultValueNumeric: "1"
+                  constraints:
+                    nullable: false
