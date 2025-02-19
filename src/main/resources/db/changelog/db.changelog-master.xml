@@ -14,7 +14,7 @@
         <tagDatabase tag="v1"/>
     </changeSet>
     <changeSet id="5" author="Katsiaryna">
-        <addPrimaryKey tableName="monthly_rides" columnNames="ride_id, month_year"/>
+        <addPrimaryKey tableName="monthly_rides" columnNames="driver_id, month_year"/>
     </changeSet>
     <changeSet id="6" author="Katsiaryna">
         <sqlFile path="classpath:/org/springframework/batch/core/schema-postgresql.sql"

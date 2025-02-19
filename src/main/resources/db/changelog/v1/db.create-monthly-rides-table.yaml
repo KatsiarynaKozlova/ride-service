@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: monthly_rides
             columns:
               - column:
-                  name: ride_id
+                  name: driver_id
                   type: bigint
                   constraints:
                     nullable: false
