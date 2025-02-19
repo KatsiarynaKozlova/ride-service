@@ -1,4 +1,4 @@
-package com.software.modsen.rideservice.repository;
+package com.software.modsen.rideservice.repository.reactive;
 
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public interface RideRepository extends ReactiveCrudRepository<Ride, Long> {
     Flux<Ride> getRidesByStatusIs(RideStatus status);
 
-    @Query("SELECT * FROM Ride WHERE id = :id FOR UPDATE")
+    @Query("SELECT * FROM rides WHERE id = :id FOR UPDATE")
     Mono<Ride> findByIdLocked(Long id);
 
     @Query("SELECT * FROM rides r WHERE " +
