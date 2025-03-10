@@ -3,7 +3,7 @@ package com.software.modsen.rideservice.service;
 import com.software.modsen.rideservice.exception.RideNotFoundException;
 import com.software.modsen.rideservice.model.Ride;
 import com.software.modsen.rideservice.model.RideStatus;
-import com.software.modsen.rideservice.repository.RideRepository;
+import com.software.modsen.rideservice.repository.reactive.RideRepository;
 import com.software.modsen.rideservice.util.ExceptionMessages;
 import com.software.modsen.rideservice.util.LogInfoMessages;
 import lombok.RequiredArgsConstructor;
@@ -53,12 +53,22 @@ public class RideService {
         });
     }
 
-    @Transactional
+    @Transactional(transactionManager = "transactionManager")
     public Mono<Ride> changeRideStatus(Long id, RideStatus status) {
         return getByIdLockedOrElseThrow(id).flatMap(ride -> {
             ride.setStatus(status);
             return rideRepository.save(ride)
                     .doOnSuccess(updatedRide -> log.info(String.format(LogInfoMessages.UPDATE_RIDE_STATUS, updatedRide.getId())));
+        });
+    }
+
+    @Transactional(transactionManager = "transactionManager")
+    public Mono<Ride> finishRide(Long id) {
+        return getByIdLockedOrElseThrow(id).flatMap(ride -> {
+            ride.setStatus(RideStatus.CANCELED);
+            ride.setFinishedAt(LocalDateTime.now());
+            return rideRepository.save(ride)
+                    .doOnSuccess(updatedRide -> log.info(String.format(LogInfoMessages.FINISHED_RIDE, updatedRide.getId())));
         });
     }
 

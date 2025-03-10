@@ -135,6 +135,22 @@ public class RideController {
                 .map(updatedRide -> ResponseEntity.ok(rideMapper.toResponse(updatedRide)));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_DRIVER')")
+    @PostMapping("/finish/{id}")
+    @Operation(description = "Finish ride ",
+            parameters = {@Parameter(name = "id", description = "This is the ride ID that will be updated")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Finish Ride. Update ride status to CANCELED, add finished_at time",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RideResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Ride not found",
+                    content = @Content(schema = @Schema(hidden = true)))
+    })
+    public Mono<ResponseEntity<RideResponse>> finishRide(@PathVariable Long id) {
+        return rideService.finishRide(id)
+                .map(updatedRide -> ResponseEntity.ok(rideMapper.toResponse(updatedRide)));
+    }
+
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/filter")
     public Mono<ResponseEntity<InfoResponse>> generateRideStats(@RequestBody RideFilterRequest filterRequest) {

@@ -3,6 +3,11 @@ server:
 spring:
   application:
     name: ride-service
+  datasource:
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+    jdbcUrl: jdbc:postgresql://localhost:5432/ride_db
+    driver-class-name: org.postgresql.Driver
   r2dbc:
     username: ${POSTGRESQL_USERNAME}
     password: ${POSTGRESQL_PASSWORD}
@@ -12,6 +17,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 100
   liquibase:
     url: jdbc:postgresql://localhost:5432/ride_db
     change-log: classpath:/db/changelog/db.changelog-master.xml
@@ -42,8 +49,10 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 springdoc:
+  api-docs:
+    path: /v3/api-docs
   swagger-ui:
-    path: /swagger-ui.html
+    path: /swagger-ui
 management:
   endpoints:
     enabled-by-default: true

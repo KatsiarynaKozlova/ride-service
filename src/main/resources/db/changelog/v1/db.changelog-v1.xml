@@ -3,4 +3,5 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <include file="db.create-rides-table.yaml" relativeToChangelogFile="true"/>
+    <include file="db.create-monthly-rides-table.yaml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

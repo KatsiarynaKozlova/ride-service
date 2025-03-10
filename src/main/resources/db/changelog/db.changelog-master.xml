@@ -10,7 +10,18 @@
         <tagDatabase tag="init_db"/>
     </changeSet>
     <include file="v1/db.changelog-v1.xml" relativeToChangelogFile="true"/>
-    <changeSet id="3" author="Katsiaryna">
+    <changeSet id="4" author="Katsiaryna">
         <tagDatabase tag="v1"/>
+    </changeSet>
+    <changeSet id="5" author="Katsiaryna">
+        <addPrimaryKey tableName="monthly_rides" columnNames="driver_id, month_year"/>
+    </changeSet>
+    <changeSet id="6" author="Katsiaryna">
+        <sqlFile path="classpath:/org/springframework/batch/core/schema-postgresql.sql"
+                 relativeToChangelogFile="false"
+                 splitStatements="true"
+                 stripComments="true"
+                 encoding="UTF-8"
+                 endDelimiter=";"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 2
-      author: Katsiatyna
+      author: Katsiaryna
       changes:
         - createTable:
             tableName: rides
@@ -39,3 +39,6 @@ databaseChangeLog:
                   name: created_at
                   type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: finished_at
+                  type: timestamp

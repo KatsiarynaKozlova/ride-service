@@ -3,7 +3,7 @@ package com.software.modsen.rideservice.service;
 import com.software.modsen.rideservice.dto.request.RideFilterRequest;
 import com.software.modsen.rideservice.exception.ExportException;
 import com.software.modsen.rideservice.model.Ride;
-import com.software.modsen.rideservice.repository.RideRepository;
+import com.software.modsen.rideservice.repository.reactive.RideRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;

@@ -1,7 +1,7 @@
 package com.software.modsen.rideservice.security;
 
 import com.software.modsen.rideservice.util.SecurityConstants;
-import lombok.extern.slf4j.Slf4j;
+import lombok.NonNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,18 +19,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-@Slf4j
 @Component
 public class JwtAuthenticationConverterRide implements Converter<Jwt, AbstractAuthenticationToken> {
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
     @Override
-    public AbstractAuthenticationToken convert(Jwt jwt) {
-        log.info("AAAAAAAAAAAAAAAAAAAAAA");//jwt.getClaims().toString());
+    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
         Collection<GrantedAuthority> authorities = Stream.concat(
                 jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
                 extractResourceRoles(jwt).stream()).collect(Collectors.toSet());
-        log.info(extractResourceRoles(jwt).toString());
         User user = extractUserInfo(jwt);
         return new UsernamePasswordAuthenticationToken(
                 user,
